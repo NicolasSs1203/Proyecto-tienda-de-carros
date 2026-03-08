@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import { cars } from '../../data/cars.js';
+
+export function getStaticPaths() {
+  return cars.map((car) => {
+    return {
+      params: { id: car.id.toString() },
+      props: { car },
+    };
+  });
+}
+
+const { car } = Astro.props;
+
+// Temporal: Variable para simular si el usuario ha iniciado sesión
+const isLoggedIn = false; 
+---
+
+<Layout title={`${car.make} ${car.model} | CARROS MOTORS`}>
+  <Header />
+  
+  <main class="min-h-screen bg-zinc-950 text-white pt-20 flex flex-col items-center">
+    
+    <!-- Hero Image Section -->
+    <div class="relative w-full h-[50vh] md:h-[65vh] overflow-hidden">
+      <!-- Back arrow -->
+      <a href="/inventario" class="absolute top-6 left-6 z-30 bg-black/50 backdrop-blur-md rounded-full p-3 hover:bg-rose-600 transition-colors border border-white/10 group flex items-center gap-2 pr-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 group-hover:-translate-x-1 transition-transform">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span class="text-sm font-semibold">Volver al Inventario</span>
+      </a>
+
+      <!-- Overlay gradient -->
+      <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent z-10"></div>
+      
+      {car.image ? (
+        <img 
+          src={car.image} 
+          alt={`${car.make} ${car.model}`}
+          class="w-full h-full object-cover object-center scale-105"
+        />
+      ) : (
+        <div class="w-full h-full bg-zinc-800 flex items-center justify-center">
+          <span class="text-zinc-500 font-mono">Image Not Available / {car.make} {car.model}</span>
+        </div>
+      )}
+    </div>
+
+    <!-- Content Section -->
+    <div class="relative z-20 w-full max-w-7xl mx-auto px-6 -mt-32 md:-mt-48 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-12">
+      
+      <!-- General Info -->
+      <div class="lg:col-span-2 space-y-6">
+        <div>
+          <h2 class="text-rose-500 font-bold uppercase tracking-widest mb-2 drop-shadow-md">{car.year} {car.make}</h2>
+          <h1 class="text-5xl md:text-7xl font-black text-white tracking-tighter drop-shadow-lg leading-tight mb-4">
+            {car.model}
+          </h1>
+          <p class="text-2xl text-zinc-300 font-mono font-medium drop-shadow-md">
+            {car.specs}
+          </p>
+        </div>
+        
+        <div class="h-px w-full bg-gradient-to-r from-white/20 to-transparent my-8"></div>
+        
+        <div class="prose prose-invert max-w-none">
+          <p class="text-zinc-400 text-lg leading-relaxed">
+            Descubre la máxima expresión de la ingeniería y el rendimiento con este exclusivo <strong>{car.year} {car.make} {car.model}</strong>. Un vehículo diseñado no solo para transportar, sino para despertar emociones. Su configuración de <strong>{car.specs.split('•')[0].trim()}</strong> te garantiza una experiencia de aceleración brutal y un dominio completo de la carretera.
+          </p>
+          <p class="text-zinc-400 text-lg leading-relaxed mt-4">
+            Este modelo es una obra maestra automotriz que combina la elegancia atemporal con la aerodinámica agresiva. El nivel de exclusividad que buscas lo encuentras en CARROS MOTORS.
+          </p>
+        </div>
+      </div>
+
+      <!-- Pricing & CTA Card -->
+      <div class="lg:col-span-1">
+        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sticky top-32 shadow-2xl">
+          <p class="text-zinc-400 text-sm font-bold uppercase tracking-wider mb-2">Precio de Venta</p>
+          <div class="text-4xl lg:text-5xl font-black text-rose-500 mb-8 drop-shadow-sm">
+            {car.price}
+          </div>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex justify-between border-b border-white/10 pb-4">
+              <span class="text-zinc-400 font-medium font-mono text-sm">Año</span>
+              <span class="text-white font-bold">{car.year}</span>
+            </div>
+            <div class="flex justify-between border-b border-white/10 pb-4">
+              <span class="text-zinc-400 font-medium font-mono text-sm">Marca</span>
+              <span class="text-white font-bold">{car.make}</span>
+            </div>
+            <div class="flex justify-between border-b border-white/10 pb-4">
+              <span class="text-zinc-400 font-medium font-mono text-sm">Estado</span>
+              <span class="text-white font-bold">Impecable</span>
+            </div>
+          </div>
+
+          {isLoggedIn ? (
+            <button class="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-rose-600/30 text-lg flex justify-center items-center gap-2">
+              Comprar
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+              </svg>
+            </button>
+          ) : (
+            <a href="/login" class="w-full py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all duration-300 shadow-lg border border-white/20 text-lg flex justify-center text-center items-center gap-2">
+              Iniciar Sesión para Comprar
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
+            </a>
+          )}
+          
+          <p class="text-center text-xs text-zinc-500 mt-4 leading-relaxed">
+            Sujeto a verificación de disponibilidad en showroom. Impuestos podrían aplicar.
+          </p>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+</Layout>

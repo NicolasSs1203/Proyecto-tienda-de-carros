@@ -1,0 +1,100 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import CarModelView from '../components/CarModelView.astro';
+import Footer from '../components/Footer.astro';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout title="Velocity Motors | Premium Car Dealership">
+	<Header />
+	<main id="main-scroller" class="h-screen overflow-hidden relative bg-black">
+		<div id="scroll-wrapper" class="transition-transform duration-[1200ms] ease-[cubic-bezier(0.25,1,0.5,1)] w-full h-full">
+			<div class="h-screen w-full relative z-10" id="section-hero">
+				<Hero />
+			</div>
+			<div class="h-screen w-full relative z-20" id="section-model" style="box-shadow: 0 -30px 60px rgba(0,0,0,0.9);">
+				<CarModelView />
+			</div>
+			<div class="h-auto w-full relative z-30" id="section-footer">
+				<Footer />
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const wrapper = document.getElementById('scroll-wrapper');
+		const heroSection = document.getElementById('section-hero');
+		const sections = [
+			document.getElementById('section-hero'),
+			document.getElementById('section-model'),
+			document.getElementById('section-footer')
+		];
+		
+		let currentSectionIndex = 0;
+		let isScrolling = false;
+
+		if (wrapper && heroSection) {
+			// Prevenir el scroll por defecto y capturar la rueda del ratón
+			window.addEventListener('wheel', (e) => {
+				e.preventDefault();
+
+				if (isScrolling) return;
+
+				// Determinar dirección del scroll (sensible a cualquier movimiento mínimo)
+				if (e.deltaY > 0 && currentSectionIndex < sections.length - 1) {
+					// Scroll Down
+					currentSectionIndex++;
+				} else if (e.deltaY < 0 && currentSectionIndex > 0) {
+					// Scroll Up
+					currentSectionIndex--;
+				} else {
+					return; // Límite alcanzado
+				}
+
+				// Bloquear nuevos eventos de scroll hasta que termine la transición
+				isScrolling = true;
+
+				// Despachar evento global para que el Header lo escuche y cambie de color
+				window.dispatchEvent(new CustomEvent('sectionChange', { 
+					detail: { index: currentSectionIndex } 
+				}));
+
+				// Calcular cuánto desplazar el contenedor completo (100vh por sección, excepto el footer)
+				let translateY = 0;
+				if (currentSectionIndex === 0) {
+					translateY = 0;
+					// Restaurar el Hero
+					heroSection.style.opacity = '1';
+					heroSection.style.filter = 'brightness(1)';
+					heroSection.style.transform = 'translateY(0)';
+				} else if (currentSectionIndex === 1) {
+					translateY = window.innerHeight;
+					// Oscurecer el Hero lentamente mientras el modelo 3D sube
+					heroSection.style.transition = 'all 1200ms cubic-bezier(0.25, 1, 0.5, 1)';
+					heroSection.style.opacity = '0';
+					heroSection.style.filter = 'brightness(0.2)';
+					heroSection.style.transform = 'translateY(50px)';
+				} else if (currentSectionIndex === 2) {
+					// Footer (Asumimos que mide menos de 100vh, desplazamos 100vh + altura del footer)
+					const footerHeight = sections[2]?.clientHeight || 0;
+					translateY = window.innerHeight + footerHeight;
+				}
+
+				// Aplicar el desplazamiento a todo el wrapper
+				wrapper.style.transform = `translateY(-${translateY}px)`;
+
+				// Liberar el scroll después de la transición larga (1200ms)
+				setTimeout(() => {
+					isScrolling = false;
+				}, 1200); 
+
+			}, { passive: false });
+		}
+	});
+</script>

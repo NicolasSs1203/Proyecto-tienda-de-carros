@@ -1,0 +1,63 @@
+---
+const benefits = [
+  {
+    title: "Ingeniería de Élite",
+    description: "Cada vehículo en nuestro catálogo representa la cúspide del rendimiento y la artesanía.",
+    icon: `<svg class="w-8 h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>`
+  },
+  {
+    title: "Mantenimiento Premium",
+    description: "Acceso exclusivo a nuestros centros de servicio especializados con técnicos certificados internacionalmente.",
+    icon: `<svg class="w-8 h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`
+  },
+  {
+    title: "Financiamiento Privado",
+    description: "Opciones de adquisición flexibles y discretas diseñadas específicamente para sus necesidades.",
+    icon: `<svg class="w-8 h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`
+  },
+  {
+    title: "Entrega Global",
+    description: "Gestión logística impecable para depositar su nueva adquisición en cualquier lugar del mundo.",
+    icon: `<svg class="w-8 h-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+  }
+];
+---
+
+<section id="beneficios" class="py-24 bg-zinc-950 relative z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-20 max-w-2xl mx-auto">
+      <h2 class="text-xs font-bold tracking-widest text-rose-500 uppercase mb-3">La Diferencia</h2>
+      <h3 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-6">Por qué elegir CARROS MOTORS</h3>
+      <p class="text-zinc-400 text-lg">Nos enorgullece ofrecer no solo vehículos de la más alta categoría, sino una experiencia de propiedad que redefine los estándares de la industria.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {benefits.map((benefit) => (
+        <div class="group relative bg-zinc-900/50 backdrop-blur-sm border border-white/5 p-8 rounded-3xl hover:bg-zinc-800/80 hover:border-white/10 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_10px_40px_-15px_rgba(225,29,72,0.2)]">
+          <!-- Decorative subtle gradient -->
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rose-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div class="w-16 h-16 rounded-2xl bg-zinc-950 flex items-center justify-center border border-white/5 mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner" set:html={benefit.icon} />
+          <h4 class="text-xl font-bold text-white mb-3">{benefit.title}</h4>
+          <p class="text-zinc-400 text-sm leading-relaxed">{benefit.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Additional Data Section -->
+    <div class="mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 text-center border-t border-white/5 pt-16">
+      <div class="p-4">
+        <h5 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 mb-2">10+</h5>
+        <p class="text-zinc-400 font-medium tracking-wide uppercase text-sm">Años de Excelencia</p>
+      </div>
+      <div class="p-4">
+        <h5 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-rose-700 mb-2">500+</h5>
+        <p class="text-zinc-400 font-medium tracking-wide uppercase text-sm">Vehículos Entregados</p>
+      </div>
+      <div class="p-4">
+        <h5 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 mb-2">24/7</h5>
+        <p class="text-zinc-400 font-medium tracking-wide uppercase text-sm">Soporte Concierge</p>
+      </div>
+    </div>
+  </div>
+</section>
