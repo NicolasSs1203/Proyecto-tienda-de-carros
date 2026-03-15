@@ -19,6 +19,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', environment: process.env.NODE_ENV });
 });
 
+// Root endpoint to prevent "Cannot GET /"
+app.get('/', (req, res) => {
+  res.json({ message: 'Bienvenido a la API de la Tienda de Autos', version: '1.0.0' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
