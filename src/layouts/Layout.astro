@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { title } = Astro.props;
+import GlobalLoader from '../components/GlobalLoader.astro';
 import '../styles/global.css';
 ---
 
@@ -19,6 +20,7 @@ import '../styles/global.css';
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
 	</head>
 	<body class="bg-zinc-950 text-zinc-50 font-['Inter'] antialiased selection:bg-rose-500 selection:text-white">
+		<GlobalLoader />
 		<slot />
 	</body>
 </html>

@@ -1,0 +1,52 @@
+---
+---
+
+<div id="global-loader" class="fixed inset-0 z-[9999] bg-zinc-950 flex flex-col items-center justify-center transition-opacity duration-700">
+  <div class="relative flex items-center justify-center">
+    <!-- Outer spinning ring -->
+    <div class="absolute w-24 h-24 border-4 border-zinc-800 rounded-full"></div>
+    <div class="absolute w-24 h-24 border-4 border-rose-600 rounded-full border-t-transparent animate-spin"></div>
+    
+    <!-- Central SVG logo or icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-white relative z-10 animate-pulse">
+      <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+      <path fill-rule="evenodd" d="M3.087 9l.54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+    </svg>
+  </div>
+  <h2 class="mt-8 text-white font-['Outfit'] font-bold tracking-widest uppercase text-sm animate-pulse">Cargando Motores...</h2>
+</div>
+
+<script>
+  // Script para manejar el loader durante navegaciones de Astro
+  function hideLoader() {
+    const loader = document.getElementById('global-loader');
+    if (loader) {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 700);
+    }
+  }
+
+  function showLoader() {
+    const loader = document.getElementById('global-loader');
+    if (loader) {
+      loader.style.display = 'flex';
+      // Pequeño timeout para forzar reflow visual antes de la transición
+      setTimeout(() => {
+        loader.style.opacity = '1';
+      }, 10);
+    }
+  }
+
+  // Escuchar cuando la carga inicial termina
+  document.addEventListener('DOMContentLoaded', hideLoader);
+  window.addEventListener('load', hideLoader);
+
+  // ViewTransitions de Astro: mostrar al salir de página, ocultar al entrar
+  document.addEventListener('astro:before-preparation', showLoader);
+  document.addEventListener('astro:page-load', hideLoader);
+
+  // Fallback de seguridad (por si una petición de render tarda demasiado, desaparecerlo igual a los 5s max)
+  setTimeout(hideLoader, 5000);
+</script>
