@@ -15,11 +15,11 @@ RUN npm install
 # Copia el resto del código fuente
 COPY . .
 
+# Genera el cliente de Prisma primero (Necesario antes de compilar TS)
+RUN npx prisma generate
+
 # Compila el código TypeScript a JavaScript
 RUN npm run build
-
-# Genera el cliente de Prisma
-RUN npx prisma generate
 
 # Expone el puerto que la app usará
 EXPOSE 3001
