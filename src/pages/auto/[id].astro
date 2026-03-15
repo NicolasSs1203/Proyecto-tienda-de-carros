@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const response = await fetch('https://proyecto-tienda-de-carros.onrender.com/api/vehicles');
   const carsData = await response.json();
