@@ -1,7 +1,19 @@
 ---
-import { cars } from '../data/cars.js';
----
+// url de producción en render
+const response = await fetch('https://proyecto-tienda-de-carros-backend.onrender.com/api/vehicles');
+const cars = await response.json();
 
+// Mapear al mismo formato para no romper componentes existentes
+const formattedCars = cars.map((car: any) => ({
+  id: car.id,
+  make: car.brand,
+  model: car.model,
+  year: car.year,
+  price: new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(car.price),
+  specs: car.description,
+  image: car.imageUrl
+}));
+---
 <section id="inventory" class="flex-1 relative w-full overflow-hidden bg-transparent flex flex-col justify-center pb-12 sm:pb-32">
   <div class="max-w-[1400px] w-full mx-auto px-6 flex flex-col h-full justify-center">
 
@@ -28,7 +40,7 @@ import { cars } from '../data/cars.js';
       </button>
 
       <div id="carousel-track" class="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 pt-2 scrollbar-hide h-full items-center smooth-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
-        {cars.map((car) => (
+        {formattedCars.map((car: any) => (
           <div class="relative bg-white/20 backdrop-blur-md border border-white/40 rounded-2xl overflow-hidden flex-none w-[90vw] sm:w-[500px] snap-center">
             <div class="aspect-[16/10] overflow-hidden relative">
             <img 
