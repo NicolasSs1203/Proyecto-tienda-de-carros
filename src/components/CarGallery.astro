@@ -1,7 +1,9 @@
 ---
-// url de producción en render
 const response = await fetch('https://proyecto-tienda-de-carros.onrender.com/api/vehicles');
 const cars = await response.json();
+
+// Pequeña demora artificial (solo para ver la animación 0.8s)
+await new Promise(resolve => setTimeout(resolve, 800));
 
 // Mapear al mismo formato para no romper componentes existentes
 const formattedCars = cars.map((car: any) => ({
