@@ -120,11 +120,8 @@ import Layout from '../layouts/Layout.astro';
         submitBtn.innerHTML = "Autenticando...";
 
         try {
-          // url local o configurada globalmente desde Render
-          const fallbackUrl = 'https://proyecto-tienda-de-carros.onrender.com';
-          const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:3001' 
-            : fallbackUrl;
+          // Resolver dinámicamente la IP de la Máquina Virtual de Azure
+          const baseUrl = window.location.protocol + '//' + window.location.hostname + ':3001';
             
           const res = await fetch(`${baseUrl}/api/auth/login`, {
             method: 'POST',

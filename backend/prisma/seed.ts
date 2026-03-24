@@ -7,7 +7,7 @@ const cars = [
     brand: "Subaru",
     model: "WRX STI",
     year: 2004,
-    // Eliminamos el '$' y los puntos, y lo pasamos a float
+
     price: 136500000,
     description: "300 hp • 0-60 4.6s • Velocidad máxima 248 km/h",
     imageUrl: "/imagenes/carros/Subaru-Impreza_WRX_STi-2004-Front_Three-Quarter.6c2f7bfa.jpg"
@@ -80,14 +80,14 @@ const cars = [
 
 async function main() {
   console.log('Iniciando subida de datos ("seeding")...');
-  
+
   for (const car of cars) {
     const vehicle = await prisma.vehicle.create({
       data: car,
     });
     console.log(`Vehículo creado: ${vehicle.brand} ${vehicle.model}`);
   }
-  
+
   console.log('¡Todos los autos han sido guardados en la BD de Render exitosamente!');
 }
 
