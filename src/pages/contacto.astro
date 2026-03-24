@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+
+// Base de Datos en Memoria de los Integrantes
+const team = [
+  {
+    name: "Nicolás",
+    role: "Full Stack & Lead",
+    github: "NicolasSs1203"
+  },
+  {
+    name: "Juan Sebastián",
+    role: "Developer",
+    github: "JuanSc120"
+  },
+  {
+    name: "Santiago",
+    role: "Developer",
+    github: "Santi234wa"
+  }
+];
+
+const repoUrl = "https://github.com/NicolasSs1203/Proyecto-tienda-de-carros";
+---
+
+<Layout title="Contacto | Equipo de Desarrollo">
+  <Header />
+
+  <main class="min-h-screen bg-zinc-950 text-white pt-32 pb-16 flex flex-col items-center px-6 relative overflow-hidden">
+    <!-- Ambient glowing backdrop effect -->
+    <div class="absolute top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-rose-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-5xl w-full z-10 text-center space-y-4 mb-16">
+      <h1 class="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 tracking-tight">
+        Equipo de Desarrollo
+      </h1>
+      <p class="text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed">
+        Los ingenieros detrás de <strong class="text-rose-500 font-bold">CARROS MOTORS</strong>. Este proyecto es de código abierto. Conoce más sobre nuestro trabajo o inspecciona el código fuente en GitHub.
+      </p>
+    </div>
+
+    <!-- Github Profiles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mb-16 z-10">
+      {team.map((member) => (
+        <a 
+          href={`https://github.com/${member.github}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="group bg-zinc-900/40 border border-white/5 hover:border-rose-500/50 rounded-3xl p-8 flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(225,29,72,0.3)] relative overflow-hidden"
+        >
+          <!-- Hover Glow -->
+          <div class="absolute inset-0 bg-gradient-to-b from-rose-500/0 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+          <!-- Avatar Container -->
+          <div class="relative w-32 h-32 mb-6 rounded-full p-1 bg-gradient-to-tr from-zinc-800 to-zinc-700 group-hover:from-rose-500 group-hover:to-orange-400 transition-all duration-500">
+            <div class="w-full h-full rounded-full overflow-hidden bg-zinc-950 border-4 border-zinc-900 group-hover:border-zinc-950 transition-colors">
+              <img 
+                src={`https://github.com/${member.github}.png`} 
+                alt={`${member.name} Profile`} 
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+            </div>
+            
+            <!-- Github Icon Badge -->
+            <div class="absolute -bottom-2 -right-2 bg-white text-black p-2 rounded-full shadow-lg transform group-hover:rotate-12 transition-transform duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Text content -->
+          <h2 class="text-2xl font-bold text-white mb-1">{member.name}</h2>
+          <p class="text-rose-500 text-sm font-semibold tracking-wide uppercase mb-3">{member.role}</p>
+          <span class="text-zinc-500 text-sm flex items-center gap-1 group-hover:text-zinc-300 transition-colors">
+            @{member.github}
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <!-- View Repo Button -->
+    <a 
+      href={repoUrl} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="z-10 bg-white hover:bg-zinc-200 text-black px-8 py-4 rounded-full font-bold text-lg flex items-center gap-3 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      Ver Código Fuente
+    </a>
+  </main>
+</Layout>
