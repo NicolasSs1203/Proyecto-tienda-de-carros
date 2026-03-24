@@ -31,16 +31,12 @@ if (Astro.request.method === "POST") {
         isError = true;
         errorMessage = json.error || "Ocurrió un error al registrarse.";
       } else {
-        const isProd = process.env.NODE_ENV === 'production';
-        Astro.cookies.set('token', json.token, { 
-          path: '/', 
-          maxAge: 60 * 60 * 24 * 7,
-          secure: isProd && Astro.url.protocol === 'https:',
-          sameSite: 'lax',
-          httpOnly: true
-        });
-        return Astro.redirect('/');
-      }
+      // Modo Compatibilidad Máxima para IPs sin HTTPS:
+      Astro.cookies.set('token', json.token, { 
+        path: '/', 
+        maxAge: 60 * 60 * 24 * 7
+      });
+      return Astro.redirect('/');
     }
   } catch (err) {
     console.error("Error SSR en Registro:", err);

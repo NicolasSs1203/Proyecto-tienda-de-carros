@@ -27,13 +27,11 @@ if (Astro.request.method === "POST") {
       errorMessage = json.error || "Credenciales incorrectas.";
     } else {
       // Dejar que el Astro Server-Side configure y selle la Cookie HTTP-Only Segura
-      const isProd = process.env.NODE_ENV === 'production';
+      // Modo Compatibilidad Máxima para IPs sin HTTPS:
+      // Quitamos HttpOnly, Secure y SameSite. Esto fuerza al navegador a aceptar la cookie incondicionalmente.
       Astro.cookies.set('token', json.token, { 
         path: '/', 
-        maxAge: 60 * 60 * 24 * 7,
-        secure: isProd && Astro.url.protocol === 'https:', // Seguro solo si realmente hay HTTPS
-        sameSite: 'lax',
-        httpOnly: true // Previene robo de cookies via JS
+        maxAge: 60 * 60 * 24 * 7
       });
       return Astro.redirect('/');
     }
