@@ -1,5 +1,48 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+let isError = false;
+let errorMessage = "";
+
+// SSR: Interceptar el POST del formulario directamente en la red interna de Docker
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const email = data.get("email");
+    const password = data.get("password");
+
+    // URL Interna de Docker (Backend): Inalcanzable desde afuera, súper seguro
+    const apiUrl = process.env.API_URL || "http://localhost:3001";
+
+    const res = await fetch(`${apiUrl}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      isError = true;
+      errorMessage = json.error || "Credenciales incorrectas.";
+    } else {
+      // Dejar que el Astro Server-Side configure y selle la Cookie HTTP-Only Segura
+      const isProd = process.env.NODE_ENV === 'production';
+      Astro.cookies.set('token', json.token, { 
+        path: '/', 
+        maxAge: 60 * 60 * 24 * 7,
+        secure: isProd && Astro.url.protocol === 'https:', // Seguro solo si realmente hay HTTPS
+        sameSite: 'lax',
+        httpOnly: true // Previene robo de cookies via JS
+      });
+      return Astro.redirect('/');
+    }
+  } catch (err) {
+    console.error("Error SSR en Login:", err);
+    isError = true;
+    errorMessage = "Error crítico de comunicación con el Backend interno.";
+  }
+}
 ---
 
 <Layout title="Iniciar Sesión | CARROS MOTORS">
@@ -34,8 +77,13 @@ import Layout from '../layouts/Layout.astro';
           <p class="text-zinc-400 text-sm">Ingresa tus credenciales para acceder a tu cuenta.</p>
         </div>
 
-        <form id="login-form" class="space-y-6">
-          <p id="error-message" class="text-rose-500 text-xs font-semibold text-center hidden"></p>
+        <form method="POST" class="space-y-6">
+          {isError && (
+             <div class="bg-rose-900/40 border border-rose-500/50 text-rose-300 text-sm font-medium py-3 px-4 rounded-xl text-center">
+               {errorMessage}
+             </div>
+          )}
+
           <div class="space-y-4">
             <!-- Email Input -->
             <div class="relative">
@@ -83,13 +131,10 @@ import Layout from '../layouts/Layout.astro';
 
           <button 
             type="submit" 
-            id="submit-btn"
-            class="w-full py-3.5 px-4 bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold rounded-xl transition-all duration-300 transform shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)] flex justify-center items-center gap-2"
+            class="w-full py-3.5 px-4 bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold rounded-xl transition-all duration-300 transform shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)] flex justify-center items-center gap-2 disabled:bg-rose-800 disabled:cursor-wait"
+            onclick="this.innerText='Autenticando...'"
           >
             Iniciar Sesión
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
           </button>
         </form>
 
@@ -101,52 +146,4 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </div>
-
-  <script>
-    const form = document.getElementById('login-form');
-    const errorMsg = document.getElementById('error-message');
-    const submitBtn = document.getElementById('submit-btn');
-
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = (document.getElementById('email') as HTMLInputElement).value;
-      const pass = (document.getElementById('password') as HTMLInputElement).value;
-
-      if(errorMsg && submitBtn) {
-        errorMsg.classList.add('hidden');
-        
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = "Autenticando...";
-
-        try {
-          // Resolver dinámicamente la IP de la Máquina Virtual de Azure
-          const baseUrl = window.location.protocol + '//' + window.location.hostname + ':3001';
-            
-          const res = await fetch(`${baseUrl}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password: pass })
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            errorMsg.textContent = data.error || "Credenciales incorrectas.";
-            errorMsg.classList.remove('hidden');
-          } else {
-            // Guardar Cookie de sesion para Astro SSR 
-            const isHttps = window.location.protocol === 'https:';
-            document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}; ${isHttps ? 'Secure;' : ''} SameSite=Lax`;
-            window.location.href = '/';
-          }
-        } catch (err) {
-          errorMsg.textContent = "Error de conexión con el servidor.";
-          errorMsg.classList.remove('hidden');
-        } finally {
-          submitBtn.innerHTML = originalText;
-        }
-      }
-    });
-  </script>
 </Layout>
