@@ -136,7 +136,8 @@ import Layout from '../layouts/Layout.astro';
             errorMsg.classList.remove('hidden');
           } else {
             // Guardar Cookie de sesion para Astro SSR 
-            document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}; Secure; SameSite=Lax`;
+            const isHttps = window.location.protocol === 'https:';
+            document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}; ${isHttps ? 'Secure;' : ''} SameSite=Lax`;
             window.location.href = '/';
           }
         } catch (err) {
