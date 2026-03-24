@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import vehicleRoutes from './routes/vehicleRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -13,13 +14,14 @@ app.use(express.json());
 
 // Main Routes
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/auth', authRoutes);
 
 // Basic health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', environment: process.env.NODE_ENV });
 });
 
-// Root endpoint to prevent "Cannot GET /"
+// Root endpoint 
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenido a la API de la Tienda de Autos', version: '1.0.0' });
 });
