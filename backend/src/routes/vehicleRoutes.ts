@@ -6,9 +6,11 @@ import nodemailer from 'nodemailer';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Configurar transportador de correo SMTP de Google
+// Configurar transportador de correo SMTP de Google (Host Explícito para la nube)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // Usar conexión TLS
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
