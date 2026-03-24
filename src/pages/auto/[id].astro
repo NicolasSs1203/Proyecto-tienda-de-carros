@@ -32,8 +32,9 @@ if (!car) {
   };
 }
 
-// Temporal: Variable para simular si el usuario ha iniciado sesión
-const isLoggedIn = false; 
+// Leer cookie para verificar si el usuario ha iniciado sesión
+const token = Astro.cookies.get('token')?.value;
+const isLoggedIn = !!token; 
 ---
 
 <Layout title={`${car.make} ${car.model} | CARROS MOTORS`}>
