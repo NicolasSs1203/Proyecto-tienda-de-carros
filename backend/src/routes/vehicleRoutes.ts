@@ -110,6 +110,9 @@ router.post('/:id/buy', verifyToken, async (req: AuthRequest, res: Response): Pr
     });
 
     // Enviar factura si el email y credenciales SMTP existen
+    console.log("-> Intento de Facturación. Correo Cliente:", userEmail);
+    console.log("-> Variables GMAIL Cargadas?:", !!process.env.GMAIL_USER, !!process.env.GMAIL_PASS);
+    
     if (userEmail && process.env.GMAIL_USER && process.env.GMAIL_PASS) {
       const formatter = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
       
@@ -159,7 +162,11 @@ router.post('/:id/buy', verifyToken, async (req: AuthRequest, res: Response): Pr
       };
       
       // Enviamos el correo en segundo plano
-      transporter.sendMail(mailOptions).catch(console.error);
+      transporter.sendMail(mailOptions)
+        .then(() => console.log("-> ¡Correo enviado satisfactoriamente por Nodemailer!"))
+        .catch(err => console.error("-> Error de Nodemailer:", err));
+    } else {
+      console.log("-> ⚠️ Cancelando envío. Faltan variables o email.");
     }
 
     res.json({ message: '¡Felicidades por tu compra!', vehicle: updatedVehicle });
