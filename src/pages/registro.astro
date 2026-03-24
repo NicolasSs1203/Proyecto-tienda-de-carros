@@ -163,10 +163,11 @@ import Layout from '../layouts/Layout.astro';
         submitBtn.innerHTML = "Cargando...";
 
         try {
-          // url local o produccion dependiendo del entorno
+          // url local o configurada globalmente desde Render
+          const fallbackUrl = 'https://proyecto-tienda-de-carros.onrender.com';
           const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
             ? 'http://localhost:3001' 
-            : 'https://proyecto-tienda-de-carros-backend.onrender.com';
+            : fallbackUrl;
             
           const res = await fetch(`${baseUrl}/api/auth/register`, {
             method: 'POST',
