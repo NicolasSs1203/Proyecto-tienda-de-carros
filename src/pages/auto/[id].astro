@@ -119,15 +119,12 @@ const isLoggedIn = !!token;
           </div>
 
           {isLoggedIn ? (
-            <>
-              <button id="buy-btn" data-car-id={car.id} class="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-rose-600/30 text-lg flex justify-center items-center gap-2">
-                Comprar
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                </svg>
-              </button>
-              <p id="buy-message" class="text-sm font-semibold text-center mt-4 hidden"></p>
-            </>
+            <a href={`/pago/${car.id}`} id="buy-btn" class="w-full py-4 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-rose-600/30 text-lg flex justify-center items-center gap-2">
+              Comprar
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+              </svg>
+            </a>
           ) : (
             <a href="/login" class="w-full py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all duration-300 shadow-lg border border-white/20 text-lg flex justify-center text-center items-center gap-2">
               Iniciar Sesión para Comprar
@@ -145,80 +142,4 @@ const isLoggedIn = !!token;
       
     </div>
   </main>
-
-  <script>
-    const buyBtn = document.getElementById('buy-btn');
-    const buyMsg = document.getElementById('buy-message');
-
-    // Función para leer cookie de Token
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(';').shift();
-      return null;
-    };
-
-    buyBtn?.addEventListener('click', async () => {
-      if(!buyBtn || !buyMsg) return;
-
-      const carId = buyBtn.getAttribute('data-car-id');
-      const token = getCookie('token');
-
-      if(!token) {
-        buyMsg.textContent = "Error: Sesión no válida.";
-        buyMsg.classList.remove('hidden', 'text-green-500');
-        buyMsg.classList.add('text-rose-500');
-        return;
-      }
-
-      const originalText = buyBtn.innerHTML;
-      buyBtn.innerHTML = "Procesando...";
-      buyBtn.setAttribute('disabled', 'true');
-      buyBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-      try {
-        const fallbackUrl = 'https://proyecto-tienda-de-carros.onrender.com';
-        const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-          ? 'http://localhost:3001' 
-          : fallbackUrl;
-
-        const res = await fetch(`${baseUrl}/api/vehicles/${carId}/buy`, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        const data = await res.json();
-
-        buyMsg.classList.remove('hidden');
-
-        if (!res.ok) {
-          buyMsg.textContent = data.error || "Ocurrió un error al procesar la compra.";
-          buyMsg.classList.remove('text-green-500');
-          buyMsg.classList.add('text-rose-500');
-          buyBtn.innerHTML = originalText;
-          buyBtn.removeAttribute('disabled');
-          buyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-          buyMsg.textContent = "¡Compra realizada con éxito! Redirigiendo...";
-          buyMsg.classList.remove('text-rose-500');
-          buyMsg.classList.add('text-green-500');
-          buyBtn.innerHTML = "Vendido";
-          
-          setTimeout(() => {
-            window.location.href = '/inventario';
-          }, 2000);
-        }
-      } catch (err) {
-        buyMsg.textContent = "Error de conexión con el servidor.";
-        buyMsg.classList.remove('hidden', 'text-green-500');
-        buyMsg.classList.add('text-rose-500');
-        buyBtn.innerHTML = originalText;
-        buyBtn.removeAttribute('disabled');
-        buyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      }
-    });
-  </script>
 </Layout>
